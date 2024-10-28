@@ -33,7 +33,7 @@ def run_tcp_connect():
 
 # Initialize the main Tkinter window
 root = tk.Tk()
-root.title("Filpper")
+root.title("Flipper")
 
 # Label and Entry for VRefN
 vrefn_label = tk.Label(root, text="VRefN:")
