@@ -248,6 +248,7 @@ def connect_to_server(server, port, vrefn, dirname="D:\\picmic_calibration\\data
 
             directory = dirname
             os.makedirs(directory, exist_ok=True)
+            clear_directory(directory)
 
             # Boucle pour la creation des dossiers specifiques a chaque operation et envoi des commandes correspondantes pour une boucle en VrefN. 
             ##xlimit = [5,40]
@@ -341,14 +342,12 @@ def connect_to_server(server, port, vrefn, dirname="D:\\picmic_calibration\\data
                 # ########################################################## #
                 #                data processing and analysis                #
                 # ########################################################## #
-                print('HERE 00')
                 ## process data from binary to ascii
                 ##os.system("/home/ilc/habreu/data_bin2ascii/readDataPicmic_bin2ascii_NOSTANDARDBREAK_VREFP.py -f /group/picmic/RUNDATA/TCPdata/run_vrefn*_vrefp*/sampic_tcp_ru*/picmic_dat*/picmic_*.bin")
                 matching_files = find_files(directory,["run_vrefn*_vrefp*","sampic_ru*","picmic_dat*","picmic_*.bin"])
                 print(BARS)
                 for indx in matching_files :
                     readDataPicmic.uncode(indx)
-                print('HERE 02')
                 print( 'count TXT ', count_txt_files(directory))
                 ####if count_txt_files("/group/picmic/RUNDATA/TCPdata")== 0 :
                 if count_txt_files(directory)== 0 :
@@ -361,14 +360,11 @@ def connect_to_server(server, port, vrefn, dirname="D:\\picmic_calibration\\data
                     continue
                 ##print('coutn TXT')
                 ####os.system("python /home/ilc/habreu/data_bin2ascii/merger.py -f /group/picmic/RUNDATA/TCPdata/*txt")
-                print('HERE 03')
                 matching_txt_files = find_files(directory,["*.txt"])
                 print(matching_txt_files)
                 ##print(' '.join(matching_txt_files))
-                print('HERE 04')
                 ####os.system(dataMergerPICMIC+" -f "+' '.join(matching_txt_files))
                 readDataPicmic.merger(matching_txt_files)
-                print('HERE 05')
 
                 ## get produce file with list of hired pixels
                 ####filescan = '/group/picmic/RUNDATA/TCPdata/run_vrefn'+str(vrefn)+'_VRefP-SCAN.csv'
@@ -377,7 +373,6 @@ def connect_to_server(server, port, vrefn, dirname="D:\\picmic_calibration\\data
                 df_scan = pd.read_csv(filescan)
                 print(df_scan)
                 scanList =  list(df_scan.select_dtypes(include=['float64']).columns)
-                print('HERE 06')
                 print('# of pixels to correct=',len(scanList))
                 print('--List of pixels to correct--')
                 print(scanList)

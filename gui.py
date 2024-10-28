@@ -17,7 +17,6 @@ def getIPAddr():
     IPAddr = fast_socket.gethostbyname(hostname)
     return IPAddr
 
-
 # Function to execute the tcp_connect.py script with the provided vrefn value
 def run_tcp_connect():
     # Get the vrefn value from the input field
@@ -27,7 +26,6 @@ def run_tcp_connect():
     if not vrefn_value:
         messagebox.showwarning("Input Error", "Please enter a value for VRefN.")
         return
-    
     # Define the base command
     command = [
         "python", r".\routines\tcp_connect.py", 
