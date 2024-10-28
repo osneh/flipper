@@ -1,7 +1,22 @@
 import os
+import socket as fast_socket
 import tkinter as tk
 from tkinter import messagebox
 import subprocess
+##import configparser
+
+# ##################################### #
+#   Settings of input/output files      #
+# ##################################### #
+##CWD = os.path.sep.join(os.path.abspath(__name__).split(os.path.sep)[:-1])
+##ConfigFolder = os.path.sep.join([CWD,'conf_Files'])
+##ConfFile = os.path.sep.join([ConfigFolder,'parameters.conf'])
+
+def getIPAddr():
+    hostanme = fast_socket.gethostname()
+    IPAddr = fast_socket.gethostbyname(hostname)
+    return IPAddr
+
 
 # Function to execute the tcp_connect.py script with the provided vrefn value
 def run_tcp_connect():
@@ -16,7 +31,8 @@ def run_tcp_connect():
     # Define the base command
     command = [
         "python", r".\routines\tcp_connect.py", 
-        "-host", "134.158.137.124",
+        ##"-host", "134.158.137.124",
+        "-host", getIPAdrr(),
         "-port", "8247",
         "-vrefn", vrefn_value,
         "-dirname", r"K:\RUNDATA\TCPdata"
@@ -47,4 +63,3 @@ run_button.grid(row=1, column=0, columnspan=2, pady=10)
 
 # Run the Tkinter main loop
 root.mainloop()
-
