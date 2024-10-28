@@ -1,0 +1,1 @@
+python .\routines\tcp_connect.py -host 134.158.139.27 -port 8247 -vrefn 75 -dirname K:\RUNDATA\TCPdata
