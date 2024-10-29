@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import messagebox
 import subprocess
 ##import configparser
+import psutil
 
 # ##################################### #
 #   Settings of input/output files      #
@@ -13,9 +14,32 @@ import subprocess
 ##ConfFile = os.path.sep.join([ConfigFolder,'parameters.conf'])
 
 def getIPAddr():
-    hostanme = fast_socket.gethostname()
+    hostname = fast_socket.gethostname()
     IPAddr = fast_socket.gethostbyname(hostname)
     return IPAddr
+
+def getPort():
+    # Get all my connections 
+    connections = psutil.net_connections(kind='inet')
+
+    # filter to get only ports equal to LISTEN
+    my_ports = [conn.laddr.port for conn in connections if conn.status == psutil.CONN_LISTEN]
+
+    # Exclude duplicate ports
+    my_ports = list(set(my_ports))
+
+    # Order from smallest to largest port
+    my_ports.sort()
+
+    # Show the TCP ports that is waiting for connection (LISTENING)
+    touse=''
+    for port in my_ports:
+    	if ( (port > 8200) & (port<9000) ):
+        	print(f"My Open TCP port= {port}  is LISTENING  for TCP connection")	
+		touse=port
+    
+    return touse
+
 
 # Function to execute the tcp_connect.py script with the provided vrefn value
 def run_tcp_connect():
@@ -30,8 +54,9 @@ def run_tcp_connect():
     command = [
         "python", r".\routines\tcp_connect.py", 
         ##"-host", "134.158.137.124",
-        "-host", getIPAdrr(),
-        "-port", "8247",
+        "-host", getIPAddr(),
+        ##"-port", "8266",
+        "-port", getPort(),
         "-vrefn", vrefn_value,
         "-dirname", r"K:\RUNDATA\TCPdata"
     ]

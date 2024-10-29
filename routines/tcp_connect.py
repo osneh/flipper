@@ -142,17 +142,17 @@ paraDict = returnSettingsDict(ConfFile)
 BARS = print(40*'--')
 VREFN_TH = paraDict.get('THRESHOLD')
 BUFFER_SIZE = paraDict.get('BUFFERSIZE')
-print('BUFFER_SIZE=',BUFFER_SIZE)
+VREFP1 = paraDict.get('VREFP_1')
+VREFP2 = paraDict.get('VREFP_2')
+
 FILEDIGITAL = os.path.sep.join([DigiFolder,paraDict.get('DIGI_FILE')])
 
 df_digital = pd.read_csv(FILEDIGITAL)
 
-
-# Fonction pour etablir une connexion TCP avec un serveur.
-# ----------------------------------------------------------
-##def connect_to_server(server, port, vrefn, dirname="K:\\RUNDATA\\TCPdata", df_digital):
-##def connect_to_server(server, port, vrefn, dirname="K:\\RUNDATA\\TCPdata", alldata):
-def connect_to_server(server, port, vrefn, dirname="D:\\picmic_calibration\\data\\TCPdata"):
+# ------------------------------------------------------------------------------ #
+# 	Fonction pour etablir une connexion TCP avec un serveur.		 #
+# ------------------------------------------------------------------------------ #
+def connect_to_server(server, port, vrefn, dirname="K:\\RUNDATA\\TCPdata"):
     try:
         # Tentative de connexion au serveur specifie par l adresse et le port.
         print(f"Tentative de connexion au serveur {server}:{port}")
@@ -280,7 +280,7 @@ def connect_to_server(server, port, vrefn, dirname="D:\\picmic_calibration\\data
 
                 # for vrefp in range(xlimit[0],xlimit[1],loop_dir):
                 ##for vrefp in range(40,61):
-                for vrefp in range(40,42):
+                for vrefp in range(VREFP1,VERFP2):
                     loop_counter+=1
                     folder_name = f"run_vrefn{vrefn}_vrefp{vrefp}"
                     # folder_path = os.path.join(directory, folder_name)
@@ -343,31 +343,23 @@ def connect_to_server(server, port, vrefn, dirname="D:\\picmic_calibration\\data
                 #                data processing and analysis                #
                 # ########################################################## #
                 ## process data from binary to ascii
-                ##os.system("/home/ilc/habreu/data_bin2ascii/readDataPicmic_bin2ascii_NOSTANDARDBREAK_VREFP.py -f /group/picmic/RUNDATA/TCPdata/run_vrefn*_vrefp*/sampic_tcp_ru*/picmic_dat*/picmic_*.bin")
                 matching_files = find_files(directory,["run_vrefn*_vrefp*","sampic_ru*","picmic_dat*","picmic_*.bin"])
-                print(BARS)
+                ##print(BARS)
                 for indx in matching_files :
                     readDataPicmic.uncode(indx)
                 print( 'count TXT ', count_txt_files(directory))
-                ####if count_txt_files("/group/picmic/RUNDATA/TCPdata")== 0 :
                 if count_txt_files(directory)== 0 :
                     vrefn+=loop_dir
-                    ####os.system('rm -rf /group/picmic/RUNDATA/TCPdata/*')
                     clear_directory(directory)
                     loop_counter=0
                     if (vrefn==xlimit[1]) :
                         sweeping_flag = False
                     continue
-                ##print('coutn TXT')
-                ####os.system("python /home/ilc/habreu/data_bin2ascii/merger.py -f /group/picmic/RUNDATA/TCPdata/*txt")
-                matching_txt_files = find_files(directory,["*.txt"])
-                print(matching_txt_files)
-                ##print(' '.join(matching_txt_files))
-                ####os.system(dataMergerPICMIC+" -f "+' '.join(matching_txt_files))
+                
+		matching_txt_files = find_files(directory,["*.txt"])
                 readDataPicmic.merger(matching_txt_files)
 
                 ## get produce file with list of hired pixels
-                ####filescan = '/group/picmic/RUNDATA/TCPdata/run_vrefn'+str(vrefn)+'_VRefP-SCAN.csv'
                 filescan = f"{directory}{os.sep}run_vrefn{vrefn}_VRefP-SCAN.csv"
                 print('file to use :', filescan)
                 df_scan = pd.read_csv(filescan)
