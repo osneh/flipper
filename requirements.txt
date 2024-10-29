@@ -1,1 +1,6 @@
-pyarrow winshell pywin32
+pyarrow
+winshell
+pywin32
+pandas
+termcolor
+psutil
